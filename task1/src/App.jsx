@@ -6,7 +6,6 @@ import im from "./assets/loginside.jpg";
 import { useForm } from "react-hook-form";
 import { z } from "zod"; // Import Zod
 import { zodResolver } from "@hookform/resolvers/zod"; // Import Zod Resolver
-import { useState } from "react";
 
 // Step 1: Define Zod schema
 const schema = z.object({
@@ -18,8 +17,6 @@ const schema = z.object({
 });
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -27,7 +24,6 @@ function App() {
   } = useForm({
     resolver: zodResolver(schema), // Connect Zod schema to React Hook Form
   });
-
 
   const onSubmit = (data) => {
     console.log(data); // Form data
