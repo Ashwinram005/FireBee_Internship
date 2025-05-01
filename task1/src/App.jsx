@@ -7,6 +7,8 @@ import im from "./assets/loginside.jpg";
 import { useForm } from "react-hook-form";
 import { z } from "zod"; // Import Zod
 import { zodResolver } from "@hookform/resolvers/zod"; // Import Zod Resolver
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Dashboard from "./Dashboard";
 
 // Step 1: Define Zod schema
 const schema = z.object({
@@ -34,8 +36,9 @@ const signupSchema = z
     path: ["confirmPassword"],
   });
 
-function App() {
+function AuthPage(){
   const [formType, setFormType] = useState("login"); // State to manage form type
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(formType === "login" ? schema : signupSchema),
@@ -74,6 +77,7 @@ function App() {
         // Successfully logged in
         console.log("Login successful");
         alert("Login successful!");
+        navigate("/dashboard");
         // Redirect user to dashboard or another page
       } else {
         // Incorrect login credentials
@@ -284,4 +288,12 @@ function App() {
   );
 }
 
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<AuthPage />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
+  );
+}
 export default App;
