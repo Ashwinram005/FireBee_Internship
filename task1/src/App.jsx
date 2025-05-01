@@ -1,11 +1,12 @@
 import biticon from "./assets/bitexelicon.jpg";
-import theme from "./assets/summer.png";
-import message from "./assets/message.png";
+import png from "./assets/png-removebg-preview.png";
+import { CiLight } from "react-icons/ci";
+import { FiMessageCircle } from "react-icons/fi";
 import im from "./assets/loginside.jpg";
 import { useForm } from "react-hook-form";
-
 import { z } from "zod"; // Import Zod
 import { zodResolver } from "@hookform/resolvers/zod"; // Import Zod Resolver
+import { useState } from "react";
 
 // Step 1: Define Zod schema
 const schema = z.object({
@@ -13,10 +14,12 @@ const schema = z.object({
   password: z
     .string()
     .nonempty("Password is required")
-    .min(6, "Password must be at least 6 characters"),// Password length validation
+    .min(6, "Password must be at least 6 characters"), // Password length validation
 });
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -25,21 +28,18 @@ function App() {
     resolver: zodResolver(schema), // Connect Zod schema to React Hook Form
   });
 
+
   const onSubmit = (data) => {
     console.log(data); // Form data
   };
 
   return (
     <div className="flex flex-col h-screen overflow-auto">
-      <div className="flex flex-row justify-between bg-gray-800 text-white text-sm font-light rounded-none items-center p-1">
+      <div className="flex flex-row justify-between bg-black text-white text-sm font-light rounded-none items-center p-1">
         <div>
-          <ul className="flex gap-2">
+          <ul className="flex gap-3">
             <li>
-              <img
-                src={biticon}
-                alt="image"
-                className="h-6 w-max ml-1 bg-gray-900 rounded-4xl"
-              />
+              <img src={png} alt="image" className="h-6 w-max ml-1" />
             </li>
             <li>Dashboard</li>
             <li>spot</li>
@@ -49,25 +49,21 @@ function App() {
           </ul>
         </div>
         <div>
-          <ul className="flex gap-2 items-center">
+          <ul className="flex gap-3 items-center">
             <li>
-              <img src={message} alt="image" className="h-6" />
+              <FiMessageCircle className="h-6 w-6 text-white dark:text-black" />
             </li>
             <li>Log in</li>
             <li className="bg-amber-400 rounded-1xl m-2 px-2 rounded-md text-black">
               Sign up
             </li>
             <li>
-              <img
-                src={theme}
-                alt="image"
-                className="h-8 bg-white mr-4 rounded-full"
-              />
+              <CiLight className="h-6 w-6 text-white dark:text-black" />
             </li>
           </ul>
         </div>
       </div>
-      <div className="flex justify-evenly items-center">
+      <div className="flex justify-start items-center">
         <div>
           <img src={im} alt="Image" className="w-3/4 h-full" />
         </div>
@@ -75,7 +71,7 @@ function App() {
           <img
             src={biticon}
             alt="image"
-            className="h-25 ml-1 bg-gray-900 rounded-4xl"
+            className="h-25 ml-1 bg-white rounded-4xl "
           />
           <p className=" font-bold">Login</p>
           <form
@@ -83,13 +79,15 @@ function App() {
             className="bg-amber-100/35  p-5 rounded-sm flex flex-col gap-2"
           >
             <div className="flex flex-col gap-2">
-              <label htmlFor="email">Email/Username</label>
+              <label htmlFor="email" className="font-sans">
+                Email/Username
+              </label>
               <input
                 type="email"
                 name="email"
                 id="email"
                 placeholder="email "
-                className="outline-none border-1 border-solid border-gray-500"
+                className="outline-none border-1 border-solid border-gray-500 p-1 rounded-sm"
                 {...register("email")}
               />
               {errors.email && (
@@ -97,13 +95,15 @@ function App() {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password" className="font-sans">
+                Password
+              </label>
               <input
                 type="password"
                 name="email"
                 id="password"
                 placeholder="password"
-                className="outline-none border-1 border-solid border-gray-500"
+                className="outline-none border-1 border-solid border-gray-500 p-1 rounded-sm"
                 {...register("password")}
               />
               {errors.password && (
@@ -113,7 +113,7 @@ function App() {
               )}
             </div>
             <div className="flex justify-end">
-              <p>Forget passord?</p>
+              <p className="text-gray-500">Forget Password?</p>
             </div>
             <button
               type="submit"
@@ -121,11 +121,14 @@ function App() {
             >
               Submit
             </button>
-            <p>Don't have an account? Sign Up now</p>
+            <p className="text-sm text-gray-600">
+              Don't have an account?{" "}
+              <span className="text-black">Sign Up now</span>
+            </p>
           </form>
         </div>
       </div>
-      <div className="flex justify-center bg-gray-800">
+      <div className="flex justify-center bg-black absolute bottom-0 w-full">
         <p className="text-white">@2025 Bitexel copyrights</p>
       </div>
     </div>
