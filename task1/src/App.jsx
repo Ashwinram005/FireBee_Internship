@@ -48,7 +48,40 @@ function App() {
   } = form;
 
   const onSubmit = (data) => {
-    console.log(data); // Form data
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    if (formType === "signup") {
+      const userExists = users.find((user) => user.email === data.email);
+      if (userExists) {
+        alert("User already exists");
+        return;
+      }
+
+      const newUser = {
+        email: data.email,
+        password: data.password, // Store plain text just for demo (in real apps, hash this)
+      };
+
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Signup successful! Please login.");
+      setFormType("login");
+    } else {
+      const user = users.find(
+        (user) => user.email === data.email && user.password === data.password
+      );
+
+      if (user) {
+        // Successfully logged in
+        console.log("Login successful");
+        alert("Login successful!");
+        // Redirect user to dashboard or another page
+      } else {
+        // Incorrect login credentials
+        console.log("Invalid email or password");
+        alert("Invalid email or password");
+      }
+      console.log("Login form submitted:", data);
+    }
   };
 
   const toggleForm = () => {
