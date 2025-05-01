@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import biticon from "./assets/bitexelicon.jpg";
 import png from "./assets/png-removebg-preview.png";
 import { CiLight } from "react-icons/ci";
@@ -28,10 +29,30 @@ function App() {
   const onSubmit = (data) => {
     console.log(data); // Form data
   };
+  
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
   return (
-    <div className="flex flex-col h-screen overflow-auto">
-      <div className="flex flex-row justify-between bg-black text-white text-sm font-light rounded-none items-center p-1">
+    <div
+      className={`flex flex-col h-screen overflow-auto ${
+        isDarkMode ? "bg-black text-white" : "bg-white text-black"
+      }`}
+    >
+      <div className="flex flex-row justify-between bg-black  text-white text-sm font-light rounded-none items-center p-1">
         <div>
           <ul className="flex gap-3">
             <li>
@@ -54,7 +75,10 @@ function App() {
               Sign up
             </li>
             <li>
-              <CiLight className="h-6 w-6 text-white dark:text-black" />
+              <CiLight
+                onClick={toggleDarkMode}
+                className="h-6 w-6 text-white hover:cursor-pointer"
+              />
             </li>
           </ul>
         </div>
@@ -63,7 +87,7 @@ function App() {
         <div>
           <img src={im} alt="Image" className="w-3/4 h-full" />
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 dark:bg-gray-900">
           <img
             src={biticon}
             alt="image"
@@ -72,7 +96,9 @@ function App() {
           <p className=" font-bold">Login</p>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-amber-100/35  p-5 rounded-sm flex flex-col gap-2"
+            className={`${
+              isDarkMode ? "bg-gray-900" : "bg-amber-100/35 "
+            } p-5 rounded-sm flex flex-col gap-2`}
           >
             <div className="flex flex-col gap-2">
               <label htmlFor="email" className="font-sans">
@@ -83,7 +109,9 @@ function App() {
                 name="email"
                 id="email"
                 placeholder="email "
-                className="outline-none border-1 border-solid border-gray-500 p-1 rounded-sm"
+                className={`outline-none border-1 border-solid border-gray-500 p-1 rounded-sm placeholder:white ${
+                  isDarkMode ? "placeholder:text-white" : ""
+                }`}
                 {...register("email")}
               />
               {errors.email && (
@@ -99,7 +127,9 @@ function App() {
                 name="email"
                 id="password"
                 placeholder="password"
-                className="outline-none border-1 border-solid border-gray-500 p-1 rounded-sm"
+                className={`outline-none border-1 border-solid border-gray-500 p-1 rounded-sm placeholder:white ${
+                  isDarkMode ? "placeholder:text-white" : ""
+                }`}
                 {...register("password")}
               />
               {errors.password && (
@@ -109,17 +139,21 @@ function App() {
               )}
             </div>
             <div className="flex justify-end">
-              <p className="text-gray-500">Forget Password?</p>
+              <p className={`${isDarkMode}:"text-gray-500":"text-white"`}>
+                Forget Password?
+              </p>
             </div>
             <button
               type="submit"
-              className=" bg-amber-500 px-1 rounded-sm w-full"
+              className=" bg-amber-500 px-1 rounded-sm w-full hover:cursor-pointer"
             >
               Submit
             </button>
-            <p className="text-sm text-gray-600">
+            <p className={`text-sm ${isDarkMode}:"text-gray-500":"text-white"`}>
               Don't have an account?{" "}
-              <span className="text-black">Sign Up now</span>
+              <span className={`isDarkMode?"text-white":"text-black"`}>
+                Sign Up now
+              </span>
             </p>
           </form>
         </div>
