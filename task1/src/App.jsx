@@ -80,7 +80,7 @@ function App() {
           <p className=" font-bold">Login</p>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-amber-100 p-5 rounded-sm flex flex-col gap-2"
+            className="bg-amber-100/35  p-5 rounded-sm flex flex-col gap-2"
           >
             <div className="flex flex-col gap-2">
               <label htmlFor="email">Email/Username</label>
