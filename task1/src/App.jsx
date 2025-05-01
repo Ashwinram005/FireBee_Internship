@@ -29,7 +29,7 @@ function App() {
   const onSubmit = (data) => {
     console.log(data); // Form data
   };
-  
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
