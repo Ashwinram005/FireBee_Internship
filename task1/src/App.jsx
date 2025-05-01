@@ -17,21 +17,55 @@ const schema = z.object({
     .min(6, "Password must be at least 6 characters"), // Password length validation
 });
 
+const signupSchema = z
+  .object({
+    email: z
+      .string()
+      .nonempty("Email is required")
+      .email("Invalid email format"),
+    password: z
+      .string()
+      .nonempty("Password is required")
+      .min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().nonempty("Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 function App() {
+  const [formType, setFormType] = useState("login"); // State to manage form type
+
+  const form = useForm({
+    resolver: zodResolver(formType === "login" ? schema : signupSchema),
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema), // Connect Zod schema to React Hook Form
-  });
+    reset,
+  } = form;
 
   const onSubmit = (data) => {
     console.log(data); // Form data
   };
 
+  const toggleForm = () => {
+    setFormType(formType === "login" ? "signup" : "login");
+  };
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme) {
+      return storedTheme === "dark";
+    }
+
+    // If no theme is stored, use the system preference (default to dark mode if the system prefers dark)
+    return (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
   });
 
   useEffect(() => {
@@ -43,6 +77,10 @@ function App() {
       localStorage.setItem("theme", "light");
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    reset();
+  }, [formType]);
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
@@ -70,9 +108,25 @@ function App() {
             <li>
               <FiMessageCircle className="h-6 w-6 text-white dark:text-black" />
             </li>
-            <li>Log in</li>
-            <li className="bg-amber-400 rounded-1xl m-2 px-2 rounded-md text-black">
-              Sign up
+            <li
+              className={`${
+                formType === "login"
+                  ? "bg-amber-400 rounded-1xl m-2 px-2 rounded-md text-black"
+                  : ""
+              } hover:cursor-pointer`}
+              onClick={() => setFormType("login")}
+            >
+              Log in
+            </li>
+            <li
+              className={`${
+                formType === "signup"
+                  ? "bg-amber-400 rounded-1xl m-2 px-2 rounded-md text-black"
+                  : ""
+              } hover:cursor-pointer`}
+              onClick={() => setFormType("signup")}
+            >
+              Sign Up
             </li>
             <li>
               <CiLight
@@ -93,7 +147,10 @@ function App() {
             alt="image"
             className="h-25 ml-1 bg-white rounded-4xl "
           />
-          <p className=" font-bold">Login</p>
+          <p className=" font-bold">
+            {" "}
+            {formType === "login" ? "Log in" : "Sign Up"}
+          </p>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={`${
@@ -138,6 +195,28 @@ function App() {
                 </p>
               )}
             </div>
+            {formType === "signup" && (
+              <div className="flex flex-col gap-2">
+                <label htmlFor="confirmPassword" className="font-sans">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  placeholder="confirm password"
+                  className={`outline-none border-1 border-solid border-gray-500 p-1 rounded-sm ${
+                    isDarkMode ? "placeholder:text-white" : ""
+                  }`}
+                  {...register("confirmPassword")}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-600 text-sm">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+            )}
             <div className="flex justify-end">
               <p className={`${isDarkMode}:"text-gray-500":"text-white"`}>
                 Forget Password?
@@ -150,9 +229,16 @@ function App() {
               Submit
             </button>
             <p className={`text-sm ${isDarkMode}:"text-gray-500":"text-white"`}>
-              Don't have an account?{" "}
-              <span className={`isDarkMode?"text-white":"text-black"`}>
-                Sign Up now
+              {formType === "login"
+                ? "Don't have an account?"
+                : "Already have an account?"}{" "}
+              <span
+                className={`${
+                  isDarkMode ? "text-white" : "text-black"
+                } hover:cursor-pointer`}
+                onClick={toggleForm}
+              >
+                {formType === "login" ? "SignUp now" : "Login"}
               </span>
             </p>
           </form>
