@@ -40,7 +40,10 @@ const signupSchema = z
 function AuthPage() {
   const [formType, setFormType] = useState("login"); // State to manage form type
   const navigate = useNavigate();
-
+  const token = localStorage.getItem("authToken");
+  if(token){
+    navigate("/dashboard");
+  }
   const form = useForm({
     resolver: zodResolver(formType === "login" ? schema : signupSchema),
   });
