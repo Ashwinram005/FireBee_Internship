@@ -7,7 +7,7 @@ import im from "./assets/loginside.jpg";
 import { useForm } from "react-hook-form";
 import { z } from "zod"; // Import Zod
 import { zodResolver } from "@hookform/resolvers/zod"; // Import Zod Resolver
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import ProtectedRoute from "./ProtectedRoute"; // Correct path if the file is in the same directory
 
@@ -335,6 +335,8 @@ function App() {
           </ProtectedRoute>
         }
       />
+<Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 }
