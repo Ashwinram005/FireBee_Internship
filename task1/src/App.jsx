@@ -41,9 +41,12 @@ function AuthPage() {
   const [formType, setFormType] = useState("login"); // State to manage form type
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
-  if(token){
-    navigate("/dashboard")
-  }
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard"); // or wherever you redirect authenticated users
+    }
+  }, [token, navigate]);
+
   const form = useForm({
     resolver: zodResolver(formType === "login" ? schema : signupSchema),
   });

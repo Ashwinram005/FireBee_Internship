@@ -1,8 +1,32 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import api from  "./api"
 function Dashboard() {
   const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
 
+    const validateToken = async () => {
+      try {
+        await api.get('/users/validate-token', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // If token is valid, do nothing
+      } catch (error) {
+        // If token is invalid or changed manually
+        localStorage.removeItem('authToken');
+        navigate('/');
+      }
+    };
+
+    if (token) {
+      validateToken();
+    } else {
+      navigate('/');
+    }
+  }, []);
   const handleLogout = () => {
     // Remove the auth token from localStorage (or sessionStorage)
     localStorage.removeItem("authToken");
