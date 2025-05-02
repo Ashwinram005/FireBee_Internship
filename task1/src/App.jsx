@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import biticon from "./assets/bitexelicon.jpg";
+import png from "./assets/png-removebg-preview.png";
+import { CiLight } from "react-icons/ci";
+import { FiMessageCircle } from "react-icons/fi";
 import png from "./assets/png-removebg-preview.png";
 import { CiLight } from "react-icons/ci";
 import { FiMessageCircle } from "react-icons/fi";
@@ -17,6 +21,7 @@ const schema = z.object({
   password: z
     .string()
     .nonempty("Password is required")
+    .min(6, "Password must be at least 6 characters"), // Password length validation
     .min(6, "Password must be at least 6 characters"), // Password length validation
 });
 
@@ -287,6 +292,9 @@ function AuthPage() {
               <p className={`${isDarkMode}:"text-gray-500":"text-white"`}>
                 Forget Password?
               </p>
+              <p className={`${isDarkMode}:"text-gray-500":"text-white"`}>
+                Forget Password?
+              </p>
             </div>
             <button
               type="submit"
@@ -310,6 +318,7 @@ function AuthPage() {
           </form>
         </div>
       </div>
+      <div className="flex justify-center bg-black absolute bottom-0 w-full">
       <div className="flex justify-center bg-black absolute bottom-0 w-full">
         <p className="text-white">@2025 Bitexel copyrights</p>
       </div>
